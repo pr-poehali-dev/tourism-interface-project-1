@@ -1,249 +1,354 @@
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
-import { useToast } from '@/hooks/use-toast';
-
-const tourData: any = {
-  '1': {
-    id: 1,
-    title: 'Райские Мальдивы',
-    location: 'Мальдивы',
-    price: 120000,
-    duration: '7 дней / 6 ночей',
-    image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1200&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80',
-      'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80',
-      'https://images.unsplash.com/photo-1589197331516-5c4d7c9e5b0f?w=800&q=80'
-    ],
-    rating: 5,
-    description: 'Погрузитесь в атмосферу райского отдыха на Мальдивах. Белоснежные пляжи, бирюзовая вода, роскошные бунгало над водой и незабываемый дайвинг среди коралловых рифов.',
-    includes: [
-      'Перелет Москва - Мале - Москва',
-      'Трансфер на гидросамолете к острову',
-      'Проживание в бунгало над водой',
-      'Питание All Inclusive',
-      'Медицинская страховка',
-      'Услуги русскоговорящего гида'
-    ],
-    program: [
-      { day: 1, title: 'Прибытие', description: 'Встреча в аэропорту, трансфер на гидросамолете, размещение в отеле, welcome dinner' },
-      { day: 2, title: 'День на пляже', description: 'Свободный день для отдыха на пляже, снорклинг' },
-      { day: 3, title: 'Морская экскурсия', description: 'Экскурсия на яхте, рыбалка, барбекю на необитаемом острове' },
-      { day: 4, title: 'Дайвинг', description: 'Погружение с аквалангом, изучение коралловых рифов' },
-      { day: 5, title: 'СПА и релакс', description: 'СПА-процедуры, йога на рассвете, романтический ужин' },
-      { day: 6, title: 'Свободный день', description: 'Свободное время для отдыха и шопинга' },
-      { day: 7, title: 'Вылет', description: 'Трансфер в аэропорт, вылет домой' }
-    ]
-  }
-};
+import { toast } from 'sonner';
 
 const TourDetail = () => {
   const { id } = useParams();
-  const { toast } = useToast();
-  const tour = tourData[id || '1'];
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+  });
 
-  if (!tour) {
-    return <div>Тур не найден</div>;
-  }
+  const tour = {
+    id: 1,
+    title: 'Тропический рай на Мальдивах',
+    location: 'Мальдивы',
+    price: 150000,
+    duration: '7 ночей / 8 дней',
+    rating: 4.9,
+    reviews: 128,
+    images: [
+      'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&auto=format&fit=crop'
+    ],
+    description: 'Погрузитесь в райское блаженство на Мальдивах! Кристально чистые воды Индийского океана, белоснежные пляжи и роскошные водные виллы ждут вас. Это идеальное место для романтического отдыха или медового месяца.',
+    includes: [
+      'Перелет Москва - Мале - Москва',
+      'Трансфер на скоростном катере',
+      'Проживание в водной вилле 7 ночей',
+      'Питание: все включено',
+      'Медицинская страховка',
+      'Услуги русскоговорящего гида'
+    ],
+    notIncludes: [
+      'Экскурсии (оплачиваются отдельно)',
+      'Дополнительное питание и напитки',
+      'Личные расходы'
+    ],
+    program: [
+      {
+        day: 1,
+        title: 'Прибытие на Мальдивы',
+        description: 'Встреча в аэропорту, трансфер на остров, размещение в отеле, welcome-ужин'
+      },
+      {
+        day: 2,
+        title: 'Пляжный отдых',
+        description: 'Свободный день для отдыха на пляже, плавание, снорклинг'
+      },
+      {
+        day: 3,
+        title: 'Дайвинг и водные развлечения',
+        description: 'Погружение с аквалангом, катание на водных лыжах, каякинг'
+      },
+      {
+        day: 4,
+        title: 'Экскурсия на необитаемый остров',
+        description: 'Морская прогулка, пикник на пляже, сноркелинг в коралловых рифах'
+      },
+      {
+        day: 5,
+        title: 'SPA и релакс',
+        description: 'День отдыха, SPA-процедуры, массаж, йога на пляже'
+      },
+      {
+        day: 6,
+        title: 'Рыбалка и романтический ужин',
+        description: 'Традиционная мальдивская рыбалка, романтический ужин на закате'
+      },
+      {
+        day: 7,
+        title: 'Свободный день',
+        description: 'Отдых на пляже, фотосессия, шоппинг в местных лавках'
+      },
+      {
+        day: 8,
+        title: 'Отъезд',
+        description: 'Трансфер в аэропорт, вылет домой'
+      }
+    ]
+  };
 
-  const handleBooking = () => {
-    toast({
-      title: "Заявка на бронирование отправлена!",
-      description: "Наш менеджер свяжется с вами в ближайшее время.",
-    });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
+    setFormData({ name: '', phone: '', email: '', message: '' });
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1">
-        <div className="relative h-[400px] md:h-[500px]">
-          <img 
-            src={tour.image} 
-            alt={tour.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-8">
-            <div className="container mx-auto">
-              <Badge className="mb-4 bg-secondary">
-                <Icon name="Star" size={14} className="mr-1" />
-                Популярный тур
-              </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">{tour.title}</h1>
-              <div className="flex items-center gap-4 text-white/90">
-                <div className="flex items-center gap-2">
-                  <Icon name="MapPin" size={20} />
-                  <span>{tour.location}</span>
+
+      <section className="py-8 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+            <Link to="/" className="hover:text-primary">Главная</Link>
+            <Icon name="ChevronRight" size={16} />
+            <Link to="/tours" className="hover:text-primary">Туры</Link>
+            <Icon name="ChevronRight" size={16} />
+            <span className="text-foreground">{tour.title}</span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="mb-6">
+                <div className="relative overflow-hidden rounded-xl h-[500px] mb-4">
+                  <img 
+                    src={tour.images[selectedImage]} 
+                    alt={tour.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Icon name="Calendar" size={20} />
-                  <span>{tour.duration}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[...Array(tour.rating)].map((_, i) => (
-                    <Icon key={i} name="Star" size={16} className="fill-secondary text-secondary" />
+                <div className="grid grid-cols-4 gap-3">
+                  {tour.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`relative overflow-hidden rounded-lg h-24 ${
+                        selectedImage === index ? 'ring-4 ring-primary' : ''
+                      }`}
+                    >
+                      <img 
+                        src={image} 
+                        alt={`Фото ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform"
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
+
+              <h1 className="text-4xl font-bold mb-4">{tour.title}</h1>
+              
+              <div className="flex flex-wrap items-center gap-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <Icon name="MapPin" size={20} className="text-primary" />
+                  <span className="text-lg">{tour.location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Icon name="Calendar" size={20} className="text-primary" />
+                  <span className="text-lg">{tour.duration}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-yellow-50 px-3 py-1 rounded-full">
+                  <Icon name="Star" size={20} className="text-yellow-500 fill-yellow-500" />
+                  <span className="font-semibold">{tour.rating}</span>
+                  <span className="text-muted-foreground">({tour.reviews} отзывов)</span>
+                </div>
+              </div>
+
+              <Tabs defaultValue="description" className="mb-8">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="description">Описание</TabsTrigger>
+                  <TabsTrigger value="program">Программа</TabsTrigger>
+                  <TabsTrigger value="includes">Что включено</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="description" className="mt-6">
+                  <Card>
+                    <CardContent className="p-6">
+                      <p className="text-lg leading-relaxed mb-6">{tour.description}</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                          <Icon name="Plane" size={24} className="text-primary mt-1" />
+                          <div>
+                            <h4 className="font-semibold mb-1">Перелет</h4>
+                            <p className="text-sm text-muted-foreground">Прямой рейс из Москвы, длительность 9 часов</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                          <Icon name="Hotel" size={24} className="text-primary mt-1" />
+                          <div>
+                            <h4 className="font-semibold mb-1">Отель 5★</h4>
+                            <p className="text-sm text-muted-foreground">Роскошная водная вилла с видом на океан</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                          <Icon name="UtensilsCrossed" size={24} className="text-primary mt-1" />
+                          <div>
+                            <h4 className="font-semibold mb-1">Питание</h4>
+                            <p className="text-sm text-muted-foreground">Все включено: завтраки, обеды, ужины</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                          <Icon name="Shield" size={24} className="text-primary mt-1" />
+                          <div>
+                            <h4 className="font-semibold mb-1">Страховка</h4>
+                            <p className="text-sm text-muted-foreground">Полная медицинская страховка включена</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="program" className="mt-6">
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="space-y-6">
+                        {tour.program.map((item) => (
+                          <div key={item.day} className="flex gap-4">
+                            <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-lg">
+                              {item.day}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
+                              <p className="text-muted-foreground">{item.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="includes" className="mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="border-2 border-green-200 bg-green-50/50">
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                          <Icon name="CheckCircle" className="text-green-600" size={24} />
+                          Включено в стоимость
+                        </h3>
+                        <ul className="space-y-3">
+                          {tour.includes.map((item, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <Icon name="Check" className="text-green-600 mt-0.5" size={20} />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-2 border-orange-200 bg-orange-50/50">
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                          <Icon name="XCircle" className="text-orange-600" size={24} />
+                          Не включено
+                        </h3>
+                        <ul className="space-y-3">
+                          {tour.notIncludes.map((item, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <Icon name="X" className="text-orange-600 mt-0.5" size={20} />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            <div className="lg:col-span-1">
+              <Card className="sticky top-24 border-2 border-primary/20">
+                <CardContent className="p-6">
+                  <div className="text-center mb-6 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">Цена от</div>
+                    <div className="text-4xl font-bold text-primary mb-1">
+                      {tour.price.toLocaleString()} ₽
+                    </div>
+                    <div className="text-sm text-muted-foreground">за человека</div>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="name">Ваше имя</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="Иван Иванов"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="phone">Телефон</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        placeholder="+7 (999) 123-45-67"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        placeholder="example@mail.ru"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="message">Комментарий</Label>
+                      <Textarea
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                        placeholder="Ваши пожелания..."
+                        rows={3}
+                      />
+                    </div>
+
+                    <Button type="submit" className="w-full h-12 text-lg bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                      <Icon name="Calendar" size={20} className="mr-2" />
+                      Забронировать тур
+                    </Button>
+                  </form>
+
+                  <div className="mt-6 pt-6 border-t space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Icon name="Clock" size={18} className="text-primary" />
+                      <span>Ответим в течение 15 минут</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Icon name="Shield" size={18} className="text-primary" />
+                      <span>Гарантия лучшей цены</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Icon name="CreditCard" size={18} className="text-primary" />
+                      <span>Рассрочка без переплат</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
+      </section>
 
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="w-full justify-start">
-                    <TabsTrigger value="overview">Обзор</TabsTrigger>
-                    <TabsTrigger value="program">Программа</TabsTrigger>
-                    <TabsTrigger value="faq">FAQ</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="overview" className="space-y-6 mt-6">
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">О туре</h2>
-                      <p className="text-muted-foreground leading-relaxed">{tour.description}</p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-bold mb-4">Что входит в стоимость</h3>
-                      <div className="grid md:grid-cols-2 gap-3">
-                        {tour.includes.map((item: string, index: number) => (
-                          <div key={index} className="flex items-start gap-2">
-                            <Icon name="Check" className="text-primary mt-1" size={20} />
-                            <span className="text-muted-foreground">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-bold mb-4">Фотогалерея</h3>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {tour.images.map((img: string, index: number) => (
-                          <img 
-                            key={index}
-                            src={img}
-                            alt={`${tour.title} ${index + 1}`}
-                            className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform cursor-pointer"
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="program" className="mt-6">
-                    <h2 className="text-2xl font-bold mb-4">Программа тура</h2>
-                    <div className="space-y-4">
-                      {tour.program.map((day: any, index: number) => (
-                        <Card key={index} className="p-6">
-                          <div className="flex gap-4">
-                            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="font-bold text-primary">{day.day}</span>
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="font-bold text-lg mb-2">{day.title}</h3>
-                              <p className="text-muted-foreground">{day.description}</p>
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="faq" className="mt-6">
-                    <h2 className="text-2xl font-bold mb-4">Часто задаваемые вопросы</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="item-1">
-                        <AccordionTrigger>Нужна ли виза для поездки на Мальдивы?</AccordionTrigger>
-                        <AccordionContent>
-                          Нет, гражданам РФ виза для въезда на Мальдивы не требуется. Штамп о въезде ставится бесплатно в аэропорту по прибытии.
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="item-2">
-                        <AccordionTrigger>Какая погода на Мальдивах?</AccordionTrigger>
-                        <AccordionContent>
-                          На Мальдивах тропический климат с температурой воздуха +28-32°C круглый год. Лучший период для посещения - с ноября по апрель (сухой сезон).
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="item-3">
-                        <AccordionTrigger>Можно ли изменить даты тура?</AccordionTrigger>
-                        <AccordionContent>
-                          Да, изменение дат возможно при наличии свободных мест. Обратитесь к вашему менеджеру не позднее чем за 14 дней до вылета.
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="item-4">
-                        <AccordionTrigger>Какие документы нужны для поездки?</AccordionTrigger>
-                        <AccordionContent>
-                          Необходим загранпаспорт, действительный не менее 6 месяцев с момента возвращения, и обратный билет.
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </TabsContent>
-                </Tabs>
-              </div>
-
-              <div className="lg:col-span-1">
-                <Card className="p-6 sticky top-24">
-                  <div className="mb-6">
-                    <div className="text-3xl font-bold text-primary mb-2">
-                      {tour.price.toLocaleString('ru-RU')} ₽
-                    </div>
-                    <p className="text-muted-foreground">за человека</p>
-                  </div>
-
-                  <Button className="w-full mb-4" size="lg" onClick={handleBooking}>
-                    <Icon name="Calendar" size={20} className="mr-2" />
-                    Забронировать тур
-                  </Button>
-
-                  <div className="space-y-3 pt-4 border-t">
-                    <div className="flex items-center gap-3 text-sm">
-                      <Icon name="Clock" size={20} className="text-primary" />
-                      <span className="text-muted-foreground">{tour.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Icon name="Users" size={20} className="text-primary" />
-                      <span className="text-muted-foreground">Группа до 12 человек</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Icon name="Shield" size={20} className="text-primary" />
-                      <span className="text-muted-foreground">Страховка включена</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Icon name="Headphones" size={20} className="text-primary" />
-                      <span className="text-muted-foreground">Поддержка 24/7</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t">
-                    <h4 className="font-semibold mb-3">Остались вопросы?</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Icon name="Phone" size={16} className="text-primary" />
-                        <span>+7 (999) 123-45-67</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Icon name="Mail" size={16} className="text-primary" />
-                        <span>info@traveldream.ru</span>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
       <Footer />
     </div>
   );
