@@ -63,14 +63,18 @@ export default function Header() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="outline" size="sm">
-              <Icon name="Phone" size={16} className="mr-2" />
-              Связаться
-            </Button>
-            <Button size="sm" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-              <Icon name="Calendar" size={16} className="mr-2" />
-              Забронировать
-            </Button>
+            <Link to="/contacts">
+              <Button variant="outline" size="sm">
+                <Icon name="Phone" size={16} className="mr-2" />
+                Связаться
+              </Button>
+            </Link>
+            <Link to="/tours">
+              <Button size="sm" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                <Icon name="Calendar" size={16} className="mr-2" />
+                Забронировать
+              </Button>
+            </Link>
           </div>
 
           <Button
@@ -112,14 +116,18 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Button variant="outline" className="w-full">
-                <Icon name="Phone" size={16} className="mr-2" />
-                Связаться
-              </Button>
-              <Button className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                <Icon name="Calendar" size={16} className="mr-2" />
-                Забронировать
-              </Button>
+              <Link to="/contacts" className="w-full">
+                <Button variant="outline" className="w-full">
+                  <Icon name="Phone" size={16} className="mr-2" />
+                  Связаться
+                </Button>
+              </Link>
+              <Link to="/tours" className="w-full">
+                <Button className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                  <Icon name="Calendar" size={16} className="mr-2" />
+                  Забронировать
+                </Button>
+              </Link>
             </div>
           </div>
         )}
