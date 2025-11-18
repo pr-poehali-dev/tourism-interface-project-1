@@ -124,7 +124,7 @@ const PopularTours = () => {
                     </span>
                     <span className="text-sm text-muted-foreground ml-1">/ чел.</span>
                   </div>
-                  <Link to={`/tour/${tour.id}`}>
+                  <Link to={`/tours/${tour.id}`}>
                     <Button>
                       Подробнее
                       <Icon name="ArrowRight" size={16} className="ml-2" />
